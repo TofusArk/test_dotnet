@@ -1,0 +1,14 @@
+/Users/samiy/Documents/GitHub/test_dotnet/bin/Debug/net8.0/test_dotnet
+/Users/samiy/Documents/GitHub/test_dotnet/bin/Debug/net8.0/test_dotnet.deps.json
+/Users/samiy/Documents/GitHub/test_dotnet/bin/Debug/net8.0/test_dotnet.runtimeconfig.json
+/Users/samiy/Documents/GitHub/test_dotnet/bin/Debug/net8.0/test_dotnet.dll
+/Users/samiy/Documents/GitHub/test_dotnet/bin/Debug/net8.0/test_dotnet.pdb
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.GeneratedMSBuildEditorConfig.editorconfig
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.AssemblyInfoInputs.cache
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.AssemblyInfo.cs
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.csproj.CoreCompileInputs.cache
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.dll
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/refint/test_dotnet.dll
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.pdb
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/test_dotnet.genruntimeconfig.cache
+/Users/samiy/Documents/GitHub/test_dotnet/obj/Debug/net8.0/ref/test_dotnet.dll
