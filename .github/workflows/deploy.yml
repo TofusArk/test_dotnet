@@ -27,20 +27,15 @@ jobs:
         $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
         $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
 
-    # Testing if vars persist if I put it in a pwsh shell
-    - name: Build
-      shell: pwsh
-      run: | 
-        $newVersion
         dotnet build --configuration Release /p:Version=$newVersion
-      
-    - name: Publish
-      shell: pwsh
-      run: | 
-        $newVersion
         dotnet publish --configuration Release /p:Version=$newVersion
+    
+    - name: Get target
+      shell: pwsh
+      run: |
+        $target_framework = Get-ChildItem bin\Release
+        $target_framework
     
 
 # Things to try:
-# ( ) Test the zip code (the path stuff. aka do vars persist between actions?)
 # ( ) RDP into the github runner
