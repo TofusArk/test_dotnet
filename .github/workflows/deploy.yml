@@ -18,58 +18,29 @@ jobs:
       with:
         dotnet-version: '8.x'
     
-    - name: Find and update version in .csproj
+    - name: Set version
+      shell: pwsh
       run: |
         $projectFile = Get-ChildItem -Recurse -Filter *.csproj | Select-Object -First 1
-        if (-not $projectFile) {
-          Write-Error "No .csproj file found in the repository."
-          exit 1
-        }
 
-        $csprojXml = [xml](Get-Content $projectFile.FullName)
+        $csprojXml = [Xml](Get-Content $projectFile.csproj)
         $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
         $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
 
-        $csprojXml.Project.PropertyGroup.Version = $newVersion.ToString()
-        $csprojXml.Save($projectFile.FullName)
-
-        Write-Output "Updated version to $newVersion"
-
-        dotnet build --configuration Release /p:Version=$newVersion
-        dotnet publish --configuration Release --output ./publish /p:Version=$newVersion
-
+    # Testing if vars persist if I put it in a pwsh shell
+    - name: Build
       shell: pwsh
-
-    # - name: Restore dependencies
-    #   run: dotnet restore
-
-    # - name: Build the application
-    #   run: dotnet build --no-restore --configuration Release /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
-
-    # - name: Publish the application
-    #   run: dotnet publish --configuration Release --output ./publish /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
+      run: | 
+        $newVersion
+        dotnet build --configuration Release /p:Version=$newVersion
+      
+    - name: Publish
+      shell: pwsh
+      run: | 
+        $newVersion
+        dotnet publish --configuration Release /p:Version=$newVersion
+    
 
 # Things to try:
-# ( ) His source code is a little diff. Try his version instead:
-# ( ) What did he mean by the "out filename could be arranged like _windows.zip"
-# ( ) Should we include the version in the zip file too?
-# ( ) Try out the zip code as well.
-# ( ) Make deploy and validate more closely resemble your original
-# ( ) Run the new build and publish commands manually
-
-# (X) Can we accomodate for there being no version property?
-  # I feel like we probably don't have to account for this. I'll ask him
-# (X) Should the versioning go in the validate or deploy?
-  # His went in the deploy and he added his comments to my deploy file as well
-# (X) Check his nuget deploy action to see if he uses persist
-  # It does not. But he does seem to check is a version exists yet
-# (X) What does the versioning code do anyway?
-  # $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
-  # If your .csproj file currently has a version 1.2.3 and this is the 42nd run of your GitHub Action,
-  # $csprojVersion.Major will be 1, and ${{ github.run_number }} will be 42.
-  # The new version created will be 1.0.42.
-# (x) How is this version different: https://domburf.medium.com/updating-the-version-number-in-your-net-build-pipeline-128f9fd5b7e
-  # Its the same except for the fact that he takes advantage of environment variables
-  # Let me try the environment variables version
-  # The PS script fetches the latest build number and the folder path of where the source files are located on the build server. It then reads the contents of the .csproj file as an XML document. The version number is set to the latest build number (as provided by the build environment) and then closes and saves the updated .csproj file. 
-  # Ah, it doesn't work bc we are not using the microsoft build env: The environment variables $Env:BUILD_SOURCESDIRECTORY and $Env:BUILD_BUILDNUMBER are both provided by the build process as part of the Microsoft build environment. 
+# ( ) Test the zip code (the path stuff. aka do vars persist between actions?)
+# ( ) RDP into the github runner

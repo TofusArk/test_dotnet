@@ -10,22 +10,26 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.x'
 
-    - name: Restore dependencies
+    - name: Install dependencies
       run: dotnet restore
 
-    - name: Build the application
-      run: dotnet build --no-restore --configuration Release
+    - name: Test with dotnet
+      run: dotnet test --logger trx --results-directory "TestResults"
 
-    - name: Run tests
-      run: dotnet test --no-build --verbosity normal
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-results
+        path: TestResults
+      if: ${{ always() }}
