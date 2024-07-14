@@ -1,0 +1,47 @@
+name: Deploy .NET Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x'
+    
+    - name: Find and update version in .csproj
+      run: |
+        $projectFile = Get-ChildItem -Recurse -Filter *.csproj | Select-Object -First 1
+        if (-not $projectFile) {
+          Write-Error "No .csproj file found in the repository."
+          exit 1
+        }
+
+        $csprojXml = [xml](Get-Content $projectFile.FullName)
+        $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
+        $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
+
+        $csprojXml.Project.PropertyGroup.Version = $newVersion.ToString()
+        $csprojXml.Save($projectFile.FullName)
+
+        Write-Output "Updated version to $newVersion"
+
+      shell: pwsh
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the application
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Publish the application
+      run: dotnet publish --configuration Release --output ./publish
