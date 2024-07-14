@@ -35,16 +35,19 @@ jobs:
 
         Write-Output "Updated version to $newVersion"
 
+        dotnet build --configuration Release /p:Version=$newVersion
+        dotnet publish --configuration Release --output ./publish /p:Version=$newVersion
+
       shell: pwsh
 
-    - name: Restore dependencies
-      run: dotnet restore
+    # - name: Restore dependencies
+    #   run: dotnet restore
 
-    - name: Build the application
-      run: dotnet build --no-restore --configuration Release /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
+    # - name: Build the application
+    #   run: dotnet build --no-restore --configuration Release /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
 
-    - name: Publish the application
-      run: dotnet publish --configuration Release --output ./publish /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
+    # - name: Publish the application
+    #   run: dotnet publish --configuration Release --output ./publish /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
 
 # Things to try:
 # ( ) His source code is a little diff. Try his version instead:
