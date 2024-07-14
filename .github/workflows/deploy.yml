@@ -41,10 +41,10 @@ jobs:
       run: dotnet restore
 
     - name: Build the application
-      run: dotnet build --no-restore --configuration Release /p:Version=$newVersion /p:PackageVersion=$newVersion
+      run: dotnet build --no-restore --configuration Release /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
 
     - name: Publish the application
-      run: dotnet publish --configuration Release --output ./publish /p:Version=$newVersion /p:PackageVersion=$newVersion
+      run: dotnet publish --configuration Release --output ./publish /p:Version=$newVersion /p:PackageVersion=$newVersion /p:NuGetVersion=$newVersion
 
 # Things to try:
 # ( ) His source code is a little diff. Try his version instead:
@@ -52,6 +52,7 @@ jobs:
 # ( ) Should we include the version in the zip file too?
 # ( ) Try out the zip code as well.
 # ( ) Make deploy and validate more closely resemble your original
+# ( ) Run the new build and publish commands manually
 
 # (X) Can we accomodate for there being no version property?
   # I feel like we probably don't have to account for this. I'll ask him
