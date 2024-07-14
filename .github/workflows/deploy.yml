@@ -23,7 +23,7 @@ jobs:
       run: |
         $projectFile = Get-ChildItem -Recurse -Filter *.csproj | Select-Object -First 1
 
-        $csprojXml = [Xml](Get-Content $projectFile.csproj)
+        $csprojXml = [Xml](Get-Content $projectFile.FullName)
         $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
         $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
 
