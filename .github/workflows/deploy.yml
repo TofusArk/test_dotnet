@@ -20,20 +20,40 @@ jobs:
     
     - name: Find and update version in .csproj
       run: |
-        $projectFile = Get-ChildItem -Recurse -Filter *.csproj | Select-Object -First 1
-        if (-not $projectFile) {
-          Write-Error "No .csproj file found in the repository."
-          exit 1
-        }
+        cls
+        Write-Host "Versioning started"
 
-        $csprojXml = [xml](Get-Content $projectFile.FullName)
-        $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
-        $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
+        "Sources directory " + $Env:BUILD_SOURCESDIRECTORY
+        "Build number " + $Env:BUILD_BUILDNUMBER
 
-        $csprojXml.Project.PropertyGroup.Version = $newVersion.ToString()
-        $csprojXml.Save($projectFile.FullName)
+        $csprojfilename = $Env:BUILD_SOURCESDIRECTORY+"\test_dotnet.csproj"
+        "Project file to update " + $csprojfilename
 
-        Write-Output "Updated version to $newVersion"
+        [xml]$csprojcontents = Get-Content -Path $csprojfilename;
+
+        "Current version number is" + $csprojcontents.Project.PropertyGroup.Version
+        $oldversionNumber = $csprojcontents.Project.PropertyGroup.Version
+
+        $csprojcontents.Project.PropertyGroup.Version = $Env:BUILD_BUILDNUMBER
+        $csprojcontents.Save($csprojfilename)
+        "Version number has been udated from " + $oldversionNumber + " to " + $Env:BUILD_BUILDNUMBER
+        
+        Write-Host "Finished"
+
+        # $projectFile = Get-ChildItem -Recurse -Filter *.csproj | Select-Object -First 1
+        # if (-not $projectFile) {
+        #   Write-Error "No .csproj file found in the repository."
+        #   exit 1
+        # }
+
+        # $csprojXml = [xml](Get-Content $projectFile.FullName)
+        # $csprojVersion = [System.Version]$csprojXml.Project.PropertyGroup.Version
+        # $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
+
+        # $csprojXml.Project.PropertyGroup.Version = $newVersion.ToString()
+        # $csprojXml.Save($projectFile.FullName)
+
+        # Write-Output "Updated version to $newVersion"
 
       shell: pwsh
 
@@ -57,5 +77,8 @@ jobs:
   # If your .csproj file currently has a version 1.2.3 and this is the 42nd run of your GitHub Action,
   # $csprojVersion.Major will be 1, and ${{ github.run_number }} will be 42.
   # The new version created will be 1.0.42.
-# ( ) How is this version different: https://domburf.medium.com/updating-the-version-number-in-your-net-build-pipeline-128f9fd5b7e
+# (x) How is this version different: https://domburf.medium.com/updating-the-version-number-in-your-net-build-pipeline-128f9fd5b7e
+  # Its the same except for the fact that he takes advantage of environment variables
+  # Let me try the environment variables version
 # ( ) Should the versioning go in the validate or deploy?
+# ( ) Make deploy and validate more closely resemble your original
