@@ -45,3 +45,17 @@ jobs:
 
     - name: Publish the application
       run: dotnet publish --configuration Release --output ./publish
+
+# Things to try:
+# ( ) His source code is a little diff. Try his version instead:
+# ( ) Can we accomodate for there being no version property?
+# ( ) What did he mean by the "out filename could be arranged like _windows.zip"
+# ( ) Should we include the version in the zip file too?
+# ( ) Try out the zip code as well.
+# (X) What does the versioning code do anyway?
+  # $newVersion = [System.Version]::new($csprojVersion.Major, 0, ${{ github.run_number }})
+  # If your .csproj file currently has a version 1.2.3 and this is the 42nd run of your GitHub Action,
+  # $csprojVersion.Major will be 1, and ${{ github.run_number }} will be 42.
+  # The new version created will be 1.0.42.
+# ( ) How is this version different: https://domburf.medium.com/updating-the-version-number-in-your-net-build-pipeline-128f9fd5b7e
+# ( ) Should the versioning go in the validate or deploy?
