@@ -20,7 +20,6 @@ jobs:
     
     - name: Find and update version in .csproj
       run: |
-        cls
         Write-Host "Versioning started"
 
         "Sources directory " + $Env:BUILD_SOURCESDIRECTORY
@@ -80,5 +79,6 @@ jobs:
 # (x) How is this version different: https://domburf.medium.com/updating-the-version-number-in-your-net-build-pipeline-128f9fd5b7e
   # Its the same except for the fact that he takes advantage of environment variables
   # Let me try the environment variables version
+  # The PS script fetches the latest build number and the folder path of where the source files are located on the build server. It then reads the contents of the .csproj file as an XML document. The version number is set to the latest build number (as provided by the build environment) and then closes and saves the updated .csproj file. 
 # ( ) Should the versioning go in the validate or deploy?
 # ( ) Make deploy and validate more closely resemble your original
